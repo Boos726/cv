@@ -436,9 +436,29 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-of
   background:#d9ff45;
 }
 
+
+.wrap{padding-top:68px}
+.langswitch{
+  position:fixed;top:12px;right:12px;z-index:50;display:flex;gap:4px;padding:5px;
+  border-radius:999px;background:rgba(16,21,31,.94);border:1px solid var(--line);
+  box-shadow:0 8px 24px rgba(0,0,0,.35)
+}
+.langswitch button{
+  min-width:46px;min-height:38px;padding:0 10px;border:0;border-radius:999px;
+  background:transparent;color:var(--text);font:inherit;font-weight:900;
+  font-size:.8rem;letter-spacing:.07em;cursor:pointer
+}
+.langswitch button:hover{background:rgba(217,255,69,.16)}
+.langswitch button[aria-pressed="true"],
+.langswitch button[aria-pressed="true"]:hover{background:#d9ff45;color:#10150a}
 </style>
 </head>
 <body>
+<div class="langswitch" role="group" aria-label="Langue / Taal / Language">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr" title="Français">FR</button>
+  <button type="button" data-lang="nl" aria-pressed="false" lang="nl" title="Nederlands">NL</button>
+  <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button>
+</div>
 <div class="wrap">
   <div class="grid">
     <aside class="sidebar card">
@@ -625,7 +645,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-of
             <strong>Technicien comptable</strong>
             <span>Centre scolaire Ma Campagne</span>
           </button>
-          <div class="edu-detail" id="comptaDetail">
+          <div class="edu-detail" id="comptaDetail" data-i18n-html="compta">
             Parcours en <strong>5e et 6e secondaire</strong>, orienté comptabilité, bureautique, traitement de documents et bases de gestion.
           </div>
 
@@ -634,7 +654,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-of
             <strong>Bachelier en automatisation</strong>
             <span>EPHEC</span>
           </button>
-          <div class="edu-detail" id="ephecDetail">
+          <div class="edu-detail" id="ephecDetail" data-i18n-html="ephec">
             <strong>1re année de bachelier en cours</strong> en automatisation à l’EPHEC.
           </div>
         </div>
@@ -747,14 +767,14 @@ const contactPanel=document.getElementById('contactPanel');
 contactToggle.addEventListener('click',()=>{
   const open=contactPanel.classList.toggle('open');
   contactToggle.setAttribute('aria-expanded',String(open));
-  contactToggle.textContent=open?'FERMER LE CONTACT':'CONTACT';
+  refreshDynamic();
 });
 
 document.querySelectorAll('.more').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const box=document.getElementById(btn.dataset.open);
     const open=box.classList.toggle('open');
-    btn.textContent=open?'Masquer les détails':"Voir ce que j’ai fait";
+    refreshDynamic();
   });
 });
 
@@ -779,6 +799,79 @@ document.querySelectorAll('.edu-button').forEach(btn=>{
 
 
 
+
+/* ===== Langues FR / NL / EN ===== */
+const I18N = {"CV interactif — Sheikh Taha": {"nl": "Interactief cv — Sheikh Taha", "en": "Interactive CV — Sheikh Taha"}, "Photo de Sheikh Taha": {"nl": "Foto van Sheikh Taha", "en": "Photo of Sheikh Taha"}, "Téléphone": {"nl": "Telefoon", "en": "Phone"}, "Adresse": {"nl": "Adres", "en": "Address"}, "Langues": {"nl": "Talen", "en": "Languages"}, "Ourdou": {"nl": "Urdu", "en": "Urdu"}, "Français": {"nl": "Frans", "en": "French"}, "Anglais": {"nl": "Engels", "en": "English"}, "Italien": {"nl": "Italiaans", "en": "Italian"}, "PROFIL PROFESSIONNEL": {"nl": "PROFESSIONEEL PROFIEL", "en": "PROFESSIONAL PROFILE"}, "Comptabilité · Organisation · Vente": {"nl": "Boekhouding · Organisatie · Verkoop", "en": "Accounting · Organisation · Sales"}, "Professionnel rigoureux et organisé, fort d’un parcours alliant gestion comptable, administrative et relation client. Spécialisé dans le traitement des données, la gestion documentaire et le suivi commercial, je mets ma polyvalence et ma maîtrise des outils bureautiques au service d’une organisation performante.": {"nl": "Nauwgezette en goed georganiseerde professional met een parcours dat boekhouding, administratie en klantenrelaties combineert. Gespecialiseerd in gegevensverwerking, documentbeheer en commerciële opvolging, zet ik mijn veelzijdigheid en mijn beheersing van kantoorsoftware in ten dienste van een performante organisatie.", "en": "Rigorous and well-organised professional with a background combining accounting, administration and customer service. Specialised in data processing, document management and sales follow-up, I put my versatility and command of office software at the service of a high-performing organisation."}, "Rigueur": {"nl": "Nauwgezetheid", "en": "Rigour"}, "Polyvalence": {"nl": "Veelzijdigheid", "en": "Versatility"}, "Travail en équipe": {"nl": "Teamwork", "en": "Teamwork"}, "expériences": {"nl": "werkervaringen", "en": "work experiences"}, "langues": {"nl": "talen", "en": "languages"}, "logiciels comptables": {"nl": "boekhoudsoftware", "en": "accounting software"}, "poursuite d’études": {"nl": "verdere studies", "en": "continuing studies"}, "Sections": {"nl": "Secties", "en": "Sections"}, "Expérience": {"nl": "Ervaring", "en": "Experience"}, "Formation": {"nl": "Opleiding", "en": "Education"}, "Compétences": {"nl": "Vaardigheden", "en": "Skills"}, "Autre": {"nl": "Overig", "en": "Other"}, "Parcours": {"nl": "Loopbaan", "en": "Career"}, "Expérience professionnelle": {"nl": "Werkervaring", "en": "Work experience"}, "Stagiaire en comptabilité": {"nl": "Stagiair boekhouding", "en": "Accounting intern"}, "2026 · 1 mois": {"nl": "2026 · 1 maand", "en": "2026 · 1 month"}, "Stage en cabinet comptable avec traitement de factures, classement et vérification de données financières.": {"nl": "Stage in een boekhoudkantoor met verwerking van facturen, archivering en controle van financiële gegevens.", "en": "Internship at an accounting firm: processing invoices, filing and checking financial data."}, "Voir ce que j’ai fait": {"nl": "Bekijk wat ik deed", "en": "See what I did"}, "Masquer les détails": {"nl": "Verberg details", "en": "Hide details"}, "FERMER LE CONTACT": {"nl": "CONTACT SLUITEN", "en": "CLOSE CONTACT"}, "Encodage de factures sur WinAuditor": {"nl": "Facturen invoeren in WinAuditor", "en": "Entering invoices in WinAuditor"}, "Scan et classement de documents comptables": {"nl": "Scannen en archiveren van boekhoudkundige documenten", "en": "Scanning and filing accounting documents"}, "Travail en équipe dans un cabinet comptable": {"nl": "Teamwerk in een boekhoudkantoor", "en": "Teamwork in an accounting firm"}, "Analyse et vérification de données financières": {"nl": "Analyseren en controleren van financiële gegevens", "en": "Analysing and checking financial data"}, "Organisation et suivi de dossiers administratifs": {"nl": "Organiseren en opvolgen van administratieve dossiers", "en": "Organising and following up administrative files"}, "Numérisation et classement de documents comptables": {"nl": "Digitaliseren en archiveren van boekhoudkundige documenten", "en": "Digitising and filing accounting documents"}, "Employé polyvalent": {"nl": "Polyvalent winkelmedewerker", "en": "Versatile store employee"}, "Expérience en magasin dans un environnement dynamique, axé sur le service client et l’organisation des rayons.": {"nl": "Winkelervaring in een dynamische omgeving, gericht op klantendienst en de organisatie van de rekken.", "en": "Store experience in a dynamic environment, focused on customer service and shelf organisation."}, "Accueil et orientation des clients": {"nl": "Klanten ontvangen en wegwijs maken", "en": "Welcoming and guiding customers"}, "Mise en rayon et réassort des articles": {"nl": "Rekken aanvullen en artikelen bijvullen", "en": "Stocking shelves and replenishing items"}, "Rangement et maintien d’une présentation soignée": {"nl": "Opruimen en een verzorgde presentatie behouden", "en": "Tidying and maintaining a neat display"}, "Vérification des produits et aide à l’organisation du stock": {"nl": "Producten controleren en helpen bij de organisatie van de voorraad", "en": "Checking products and helping organise stock"}, "Travail efficace en équipe pendant les périodes chargées": {"nl": "Efficiënt samenwerken in team tijdens drukke periodes", "en": "Working efficiently as a team during busy periods"}, "Vendeur étudiant": {"nl": "Jobstudent verkoper", "en": "Student sales assistant"}, "Expérience en vente incluant le contact client, la gestion des marchandises, la présentation des produits et une grande polyvalence.": {"nl": "Verkoopervaring met klantencontact, goederenbeheer, productpresentatie en grote veelzijdigheid.", "en": "Sales experience including customer contact, goods handling, product presentation and great versatility."}, "Réception et vérification des marchandises": {"nl": "Goederen ontvangen en controleren", "en": "Receiving and checking goods"}, "Utilisation d’un logiciel de vente": {"nl": "Gebruik van verkoopsoftware", "en": "Using sales software"}, "Mise en rayon et création de présentations attractives": {"nl": "Rekken aanvullen en aantrekkelijke presentaties maken", "en": "Stocking shelves and creating attractive displays"}, "Présentation et démonstration des produits aux clients": {"nl": "Producten voorstellen en demonstreren aan klanten", "en": "Presenting and demonstrating products to customers"}, "Polyvalence dans les différentes tâches du magasin": {"nl": "Veelzijdigheid in de verschillende taken van de winkel", "en": "Versatility across the various tasks in the shop"}, "Études": {"nl": "Studies", "en": "Studies"}, "Technicien comptable": {"nl": "Technicus boekhouding", "en": "Accounting technician"}, "Bachelier en automatisation": {"nl": "Bachelor in automatisering", "en": "Bachelor’s degree in Automation"}, "Expertise": {"nl": "Expertise", "en": "Expertise"}, "Appuie sur un outil pour voir un exemple": {"nl": "Tik op een tool voor een voorbeeld", "en": "Tap a tool to see an example"}, "Outils numériques": {"nl": "Digitale tools", "en": "Digital tools"}, "Bonne maîtrise": {"nl": "Goede beheersing", "en": "Good command"}, "Pratique professionnelle": {"nl": "Beroepservaring", "en": "Professional experience"}, "Utilisation": {"nl": "Basisgebruik", "en": "Basic use"}, "Création et mise en page de documents professionnels, tableaux, courriers, rapports et modèles de documents. Utilisation des styles, en-têtes, pieds de page et outils de correction.": {"nl": "Opmaken van professionele documenten, tabellen, brieven, rapporten en documentsjablonen. Gebruik van stijlen, kop- en voetteksten en correctietools.", "en": "Creating and formatting professional documents, tables, letters, reports and document templates. Use of styles, headers, footers and proofreading tools."}, "Création de tableaux de suivi, tri et filtrage de données, utilisation de formules courantes, mise en forme de feuilles et préparation de tableaux pour le suivi administratif.": {"nl": "Aanmaken van opvolgtabellen, sorteren en filteren van gegevens, gebruik van gangbare formules, opmaak van werkbladen en voorbereiding van tabellen voor administratieve opvolging.", "en": "Creating tracking tables, sorting and filtering data, using common formulas, formatting sheets and preparing tables for administrative follow-up."}, "Encodage de factures, consultation de données comptables, vérification d’informations et utilisation du logiciel lors d’un stage en cabinet comptable.": {"nl": "Facturen invoeren, boekhoudkundige gegevens raadplegen, informatie controleren en de software gebruiken tijdens een stage in een boekhoudkantoor.", "en": "Entering invoices, consulting accounting data, checking information and using the software during an internship at an accounting firm."}, "Utilisation de base du logiciel pour la saisie d’informations comptables, la consultation de dossiers et l’organisation de données liées aux opérations courantes.": {"nl": "Basisgebruik van de software voor het invoeren van boekhoudkundige gegevens, het raadplegen van dossiers en het organiseren van gegevens met betrekking tot de dagelijkse verrichtingen.", "en": "Basic use of the software for entering accounting information, consulting files and organising data related to day-to-day operations."}, "Compétences métier": {"nl": "Vakvaardigheden", "en": "Professional skills"}, "Encodage de factures": {"nl": "Facturen invoeren", "en": "Invoice entry"}, "Saisie de données": {"nl": "Gegevensinvoer", "en": "Data entry"}, "Classement documentaire": {"nl": "Documentarchivering", "en": "Document filing"}, "Vérification de données": {"nl": "Gegevenscontrole", "en": "Data verification"}, "Précision": {"nl": "Nauwkeurigheid", "en": "Accuracy"}, "Sens des responsabilités": {"nl": "Verantwoordelijkheidszin", "en": "Sense of responsibility"}, "Compléments": {"nl": "Aanvullend", "en": "Additional"}, "Informations complémentaires": {"nl": "Aanvullende informatie", "en": "Additional information"}, "Permis B": {"nl": "Rijbewijs B", "en": "Category B driving licence"}, "Mobilité autonome pour les déplacements professionnels et personnels.": {"nl": "Zelfstandige mobiliteit voor professionele en persoonlijke verplaatsingen.", "en": "Independent mobility for professional and personal travel."}, "Formation en secourisme": {"nl": "EHBO-opleiding", "en": "First aid training"}, "Connaissance des premiers secours, réaction en cas d’urgence et gestes essentiels.": {"nl": "Kennis van eerste hulp, reactie bij noodgevallen en essentiële handelingen.", "en": "Knowledge of first aid, emergency response and essential techniques."}};
+const I18N_HTML = {"compta": {"fr": "Parcours en <strong>5e et 6e secondaire</strong>, orienté comptabilité, bureautique, traitement de documents et bases de gestion.", "nl": "Traject in het <strong>5e en 6e jaar secundair onderwijs</strong>, gericht op boekhouding, kantoortoepassingen, documentverwerking en basisbeginselen van beheer.", "en": "Programme in the <strong>5th and 6th year of secondary school</strong>, focused on accounting, office applications, document processing and management basics."}, "ephec": {"fr": "<strong>1re année de bachelier en cours</strong> en automatisation à l’EPHEC.", "nl": "<strong>1e jaar bachelor lopend</strong> in automatisering aan de EPHEC.", "en": "<strong>1st year of the bachelor’s degree in progress</strong> in automation at EPHEC."}};
+const ARIA_LEVEL = {nl:n=>'Niveau '+n+' van 5', en:n=>'Level '+n+' of 5'};
+let lang = 'fr';
+const entries = [];
+const attrEntries = [];
+
+function norm(s){ return s.replace(/\s+/g,' ').trim(); }
+function t(key){
+  const e = I18N[key];
+  return (lang === 'fr' || !e || !e[lang]) ? key : e[lang];
+}
+function refreshDynamic(){
+  contactToggle.textContent = t(contactPanel.classList.contains('open') ? 'FERMER LE CONTACT' : 'CONTACT');
+  document.querySelectorAll('.more').forEach(b=>{
+    const open = document.getElementById(b.dataset.open).classList.contains('open');
+    b.textContent = t(open ? 'Masquer les détails' : 'Voir ce que j’ai fait');
+  });
+}
+function collect(){
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let n;
+  while((n = walker.nextNode())){
+    const p = n.parentElement;
+    if(!p || p.closest('script,style,.more,#contactToggle,[data-i18n-html]')) continue;
+    const key = norm(n.nodeValue);
+    if(!key || !I18N[key]) continue;
+    const m = n.nodeValue.match(/^(\s*)[\s\S]*?(\s*)$/);
+    entries.push({node:n, key, pre:m[1], post:m[2]});
+  }
+  document.querySelectorAll('[alt],[aria-label]').forEach(el=>{
+    ['alt','aria-label'].forEach(a=>{
+      const v = el.getAttribute(a);
+      if(v === null) return;
+      const lvl = v.match(/^Niveau (\d) sur 5$/);
+      if(lvl) attrEntries.push({el, a, key:v, level:lvl[1]});
+      else if(I18N[v]) attrEntries.push({el, a, key:v});
+    });
+  });
+}
+function applyLang(l){
+  lang = l;
+  document.documentElement.lang = l;
+  document.title = t('CV interactif — Sheikh Taha');
+  entries.forEach(e=>{ e.node.nodeValue = e.pre + t(e.key) + e.post; });
+  attrEntries.forEach(e=>{
+    e.el.setAttribute(e.a, e.level ? (lang==='fr' ? e.key : ARIA_LEVEL[lang](e.level)) : t(e.key));
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    el.innerHTML = I18N_HTML[el.dataset.i18nHtml][lang];
+  });
+  refreshDynamic();
+  document.querySelectorAll('.langswitch button').forEach(b=>{
+    b.setAttribute('aria-pressed', String(b.dataset.lang === l));
+  });
+  try{ localStorage.setItem('cv-lang', l); }catch(e){}
+}
+collect();
+document.querySelectorAll('.langswitch button').forEach(b=>{
+  b.addEventListener('click',()=>applyLang(b.dataset.lang));
+});
+(function(){
+  let start = 'fr';
+  try{
+    const q = new URLSearchParams(location.search).get('lang');
+    const saved = localStorage.getItem('cv-lang');
+    if(['fr','nl','en'].indexOf(q) > -1) start = q;
+    else if(['fr','nl','en'].indexOf(saved) > -1) start = saved;
+  }catch(e){}
+  if(start !== 'fr') applyLang(start);
+})();
 </script>
 </body>
 </html>
